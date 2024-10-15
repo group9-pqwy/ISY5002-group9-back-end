@@ -29,7 +29,6 @@ public class PictureServiceIml implements PictureService {
     @Override
     public String getPictureIdFromTelegram(Update update) {
         List<PhotoSize> photoList = update.getMessage().getPhoto();
-
         PhotoSize largestPhoto = photoList.get(photoList.size() - 1);
 
         return largestPhoto.getFileId();
@@ -40,9 +39,7 @@ public class PictureServiceIml implements PictureService {
         String BOT_TOKEN = telegramBotConfig.getToken();
         String TELEGRAM_API_BASE_URL = "https://api.telegram.org/bot" + BOT_TOKEN;
         HttpClient client = HttpClient.newHttpClient();
-
         String getFileUrl = TELEGRAM_API_BASE_URL + "/getFile?file_id=" + pictureId;
-
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(new URI(getFileUrl))
                 .GET()

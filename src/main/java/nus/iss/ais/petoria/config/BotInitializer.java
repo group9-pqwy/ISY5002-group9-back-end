@@ -1,7 +1,7 @@
 package nus.iss.ais.petoria.config;
 
 import lombok.extern.slf4j.Slf4j;
-import nus.iss.ais.petoria.controller.BotController;
+import nus.iss.ais.petoria.bot.PetoriaBot;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
@@ -12,17 +12,17 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 @Slf4j
 public class BotInitializer implements CommandLineRunner {
 
-    private final BotController botController;
+    private final PetoriaBot petoriaBot;
 
-    public BotInitializer(BotController botController) {
-        this.botController = botController;
+    public BotInitializer(PetoriaBot petoriaBot) {
+        this.petoriaBot = petoriaBot;
     }
 
     @Override
     public void run(String... args) throws Exception {
         TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
         try {
-            botsApi.registerBot(botController);
+            botsApi.registerBot(petoriaBot);
             log.info("Telegram bot registered successfully.");
         } catch (TelegramApiException e) {
             e.printStackTrace();
