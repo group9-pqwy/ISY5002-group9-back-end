@@ -4,6 +4,15 @@ telegram:
         token: 8065296727:AAH8B6pJIuuy7yY52paTe2wOk1qxGDGFy2s
 
 spring:
+    datasource:
+        url: jdbc:mysql://35.187.253.64:3306/petoria_database?useSSL=false&serverTimezone=UTC
+        username: qqy
+        password: qqy1999815
+        driver-class-name: com.mysql.cj.jdbc.Driver
+
+    mybatis:
+        mapper-locations: classpath:mapper/*.xml
+        type-aliases-package: nus.iss.ais.petoria.model
     kafka:
         bootstrap-servers: localhost:9092,localhost:9093,localhost:9094
         consumer:
