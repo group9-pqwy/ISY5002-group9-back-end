@@ -1,5 +1,7 @@
 package nus.iss.ais.petoria.service.impl;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import nus.iss.ais.petoria.config.TelegramBotConfig;
 import nus.iss.ais.petoria.service.PictureService;
@@ -55,7 +57,7 @@ public class PictureServiceImpl implements PictureService {
     }
 
     @Override
-    public String downloadAndSendToFlask(String filePath) throws Exception {
+    public List<String> downloadAndSendToFlask(String filePath) throws Exception {
         String BOT_TOKEN = telegramBotConfig.getToken();
         String TELEGRAM_FILE_BASE_URL = "https://api.telegram.org/file/bot" + BOT_TOKEN + "/";
 
@@ -70,11 +72,11 @@ public class PictureServiceImpl implements PictureService {
 
         String localImagePath = "downloaded_image.jpg";
         Files.copy(imageResponse.body(), Paths.get(localImagePath), StandardCopyOption.REPLACE_EXISTING);
-
+        sendImageToFlask(localImagePath);
         return sendImageToFlask(localImagePath);
     }
 
-    private String sendImageToFlask(String imagePath) throws Exception {
+    private List<String> sendImageToFlask(String imagePath) throws Exception {
         HttpClient client = HttpClient.newHttpClient();
         String flaskUrl = "http://localhost:5000/process_image";
 
@@ -109,7 +111,13 @@ public class PictureServiceImpl implements PictureService {
             log.info("Failed to send image to Flask. Response Code: " + response.statusCode());
         }
 
-        return response.body();
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode jsonResponse = objectMapper.readTree(response.body());
+
+        return objectMapper.convertValue(
+                jsonResponse.get("predicted_breeds"),
+                objectMapper.getTypeFactory().constructCollectionType(List.class, String.class)
+        );
     }
 }
 

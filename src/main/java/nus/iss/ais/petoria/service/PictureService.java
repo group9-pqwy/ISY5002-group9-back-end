@@ -2,6 +2,8 @@ package nus.iss.ais.petoria.service;
 
 import org.telegram.telegrambots.meta.api.objects.Update;
 
+import java.util.List;
+
 /**
  * PictureService interface defines methods for handling image-related operations
  * with the Telegram bot, including extracting the image ID, retrieving the image path,
@@ -33,6 +35,6 @@ public interface PictureService {
      * @return the response from the Flask service after processing the image
      * @throws Exception if there is an issue during the download or sending process
      */
-    String downloadAndSendToFlask(String filePath) throws Exception;
+    List<String> downloadAndSendToFlask(String filePath) throws Exception;
 
 }
