@@ -2,8 +2,10 @@ package nus.iss.ais.petoria.service.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import lombok.extern.slf4j.Slf4j;
 import nus.iss.ais.petoria.config.TelegramBotConfig;
+import nus.iss.ais.petoria.model.DogBreedPrediction;
 import nus.iss.ais.petoria.service.PictureService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -72,11 +75,15 @@ public class PictureServiceImpl implements PictureService {
 
         String localImagePath = "downloaded_image.jpg";
         Files.copy(imageResponse.body(), Paths.get(localImagePath), StandardCopyOption.REPLACE_EXISTING);
-        sendImageToFlask(localImagePath);
-        return sendImageToFlask(localImagePath);
+        DogBreedPrediction dogBreedPrediction = sendImageToFlask(localImagePath);
+        List<String> result = new ArrayList<>();
+        result.add(dogBreedPrediction.getPurebredPrediction());
+        result.add(dogBreedPrediction.getMixedBreedPrediction().get(0));
+        result.add(dogBreedPrediction.getMixedBreedPrediction().get(1));
+        return result;
     }
 
-    private List<String> sendImageToFlask(String imagePath) throws Exception {
+    private DogBreedPrediction sendImageToFlask(String imagePath) throws Exception {
         HttpClient client = HttpClient.newHttpClient();
         String flaskUrl = "http://localhost:5000/process_image";
 
@@ -112,12 +119,11 @@ public class PictureServiceImpl implements PictureService {
         }
 
         ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode jsonResponse = objectMapper.readTree(response.body());
+        objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
 
-        return objectMapper.convertValue(
-                jsonResponse.get("predicted_breeds"),
-                objectMapper.getTypeFactory().constructCollectionType(List.class, String.class)
-        );
+        DogBreedPrediction prediction = objectMapper.readValue(response.body(), DogBreedPrediction.class);
+
+        return prediction;
     }
 }
 

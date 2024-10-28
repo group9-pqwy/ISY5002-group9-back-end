@@ -80,7 +80,7 @@ public class PetoriaBot extends TelegramLongPollingBot {
             String fileUrl = TELEGRAM_FILE_BASE_URL + pictureURl;
             List<String> petBreed = pictureService.downloadAndSendToFlask(pictureURl);
 
-            execute(sendMessageService.setNormalMessage(chatId,"This cute little creature looks like "+petBreed.get(0)+" or "+petBreed.get(1)+" or a mix of them."));
+            execute(sendMessageService.setNormalMessage(chatId,"If this adorable little buddy is a purebred, then it’s a perfect little "+petBreed.get(0)+". But if it’s a mix, it’s probably got a charming blend of "+petBreed.get(1)+" and "+petBreed.get(2)+" in its family tree!"));
             return loggingService.insertPredictRecord(fileUrl,"b1"+petBreed.get(0)+"b2"+petBreed.get(1));
         } catch (Exception e) {
             throw new RuntimeException(e);
