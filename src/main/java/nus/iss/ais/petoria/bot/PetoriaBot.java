@@ -81,7 +81,7 @@ public class PetoriaBot extends TelegramLongPollingBot {
             List<String> petBreed = pictureService.downloadAndSendToFlask(pictureURl);
 
             execute(sendMessageService.setNormalMessage(chatId,"If this adorable little buddy is a purebred, then it’s a perfect little "+petBreed.get(0)+". But if it’s a mix, it’s probably got a charming blend of "+petBreed.get(1)+" and "+petBreed.get(2)+" in its family tree!"));
-            return loggingService.insertPredictRecord(fileUrl,"b1"+petBreed.get(0)+"b2"+petBreed.get(1));
+            return loggingService.insertPredictRecord(fileUrl,"b0 "+petBreed.get(0)+" b1 "+petBreed.get(1)+" b2 "+petBreed.get(2));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
