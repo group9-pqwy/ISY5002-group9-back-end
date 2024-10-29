@@ -11,9 +11,9 @@
         </commentGenerator>
 
         <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
-                        connectionURL="jdbc:mysql://35.187.253.64:3306/petoria_database?useSSL=false&amp;serverTimezone=UTC"
-                        userId="qqy"
-                        password="qqy1999815">
+                        connectionURL="jdbc:mysql://"
+                        userId=""
+                        password="">
         </jdbcConnection>
 
         <!-- Java 类型解析器 -->
